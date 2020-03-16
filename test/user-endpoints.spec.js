@@ -172,17 +172,19 @@ describe('User Endpoints', function () {
           name: 'test name',
         };
         const expectedList = {
-          name: 'French',
+          name: 'Japanese',
           total_score: 0,
           words: [
-            { original: 'entraine toi', translation: 'practice' },
-            { original: 'bonjour', translation: 'hello' },
-            { original: 'maison', translation: 'house' },
-            { original: 'développeur', translation: 'developer' },
-            { original: 'traduire', translation: 'translate' },
-            { original: 'incroyable', translation: 'amazing' },
-            { original: 'chien', translation: 'dog' },
-            { original: 'chat', translation: 'cat' },
+            { original: 'Imo', translation: 'Potato' },
+            { original: 'Muda', translation: 'Futility' },
+            { original: 'Raijin', translation: 'Thunder God' },
+            { original: 'Nekomimi', translation: 'Cat Ear' },
+            { original: 'Gambatte', translation: 'Do Your Best' },
+            { original: 'Oyasumi', translation: 'Good Night' },
+            { original: 'Kawaii', translation: 'Cute' },
+            { original: 'Nani Kore', translation: 'Whats This' },
+            { original: 'Itadakimasu', translation: 'Lets Eat' },
+            { original: 'Chotto Matte', translation: 'Wait A Minute' },
           ]
         };
         return supertest(app)
