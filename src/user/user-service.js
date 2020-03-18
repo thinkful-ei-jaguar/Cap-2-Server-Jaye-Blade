@@ -59,15 +59,26 @@ const UserService = {
 
       const languageWords = [
         ['Imo', 'Potato', 2],
-        ['Muda', 'Futility', 3],
-        ['Raijin', 'Thunder God', 4],
-        ['Nekomimi', 'Cat Ear', 5],
-        ['Gambatte', 'Do Your Best', 6],
-        ['Oyasumi', 'Good Night', 7],
-        ['Kawaii', 'Cute', 8],
-        ['Nani Kore', 'Whats This', 9],
-        ['Itadakimasu', 'Lets Eat', 10],
-        ['Chotto Matte', 'Wait A Minute', null],
+        ['Minikui', 'Ugly', 3],
+        ['Muda', 'Futility', 4],
+        ['Yomu', 'To Read', 5],
+        ['Raijin', 'Thunder God', 6],
+        ['Ai', 'Love', 7],
+        ['Nekomimi', 'Cat Ear', 8],
+        ['Bideogēmu O Shimasu', 'To Play Video Game', 9],
+        ['Gambatte', 'Do Your Best', 10],
+        ['Kaigi-Teki', 'Skeptical', 11],
+        ['Oyasumi', 'Good Night', 12],
+        ['Teinei', 'Polite', 13],
+        ['Kawaii', 'Cute', 14],
+        ['Rika', 'Science', 15],
+        ['Nani Kore', 'Whats This', 16],
+        ['Okashī', 'Funny', 17],
+        ['Itadakimasu', 'Lets Eat', 18],
+        ['Baka Na', 'Impossible', 19],
+        ['Kowai', 'Scary', 20],
+        ['Shitsuke', 'Discipline', 21],
+        ['Chotto Matte', 'Wait A Moment', null]
       ];
 
       const [languageHeadId] = await trx

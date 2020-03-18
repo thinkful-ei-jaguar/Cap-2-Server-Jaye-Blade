@@ -176,15 +176,26 @@ describe('User Endpoints', function () {
           total_score: 0,
           words: [
             { original: 'Imo', translation: 'Potato' },
+            { original: 'Minikui', translation: 'Ugly' },
             { original: 'Muda', translation: 'Futility' },
+            { original: 'Yomu', translation: 'To Read' },
             { original: 'Raijin', translation: 'Thunder God' },
+            { original: 'Ai', translation: 'Love' },
             { original: 'Nekomimi', translation: 'Cat Ear' },
+            { original: 'Bideogēmu O Shimasu', translation: 'To Play Video Game' },
             { original: 'Gambatte', translation: 'Do Your Best' },
+            { original: 'Kaigi-Teki', translation: 'Skeptical' },
             { original: 'Oyasumi', translation: 'Good Night' },
+            { original: 'Teinei', translation: 'Polite' },
             { original: 'Kawaii', translation: 'Cute' },
+            { original: 'Rika', translation: 'Science' },
             { original: 'Nani Kore', translation: 'Whats This' },
+            { original: 'Okashī', translation: 'Funny' },
             { original: 'Itadakimasu', translation: 'Lets Eat' },
-            { original: 'Chotto Matte', translation: 'Wait A Minute' },
+            { original: 'Baka Na', translation: 'Impossible' },
+            { original: 'Kowai', translation: 'Scary' },
+            { original: 'Shitsuke', translation: 'Discipline' },
+            { original: 'Chotto Matte', translation: 'Wait A Moment' },
           ]
         };
         return supertest(app)
