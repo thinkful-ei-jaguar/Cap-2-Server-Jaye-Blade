@@ -1,4 +1,3 @@
-
 const LanguageService = {
   getUsersLanguage(db, user_id) {
     return db
@@ -37,14 +36,15 @@ const LanguageService = {
       WHERE w.id = ${head};`)
   },
 
-  populate(db, language_id){
-    return db.raw(`SELECT original
+  populate(db, language_id, word_id){
+    return db.raw(`SELECT original, "next"
     FROM word w JOIN "language" l ON w.language_id = l.id
     where l.id = ${language_id}
-    order by w.id`)
+    and w.id = ${word_id}`)
+   
   },
 
-  getWord(db, language_id, word){
+  getTrans(db, language_id, word){
     return db.raw(`SELECT "translation"
     FROM word w JOIN "language" l ON w.language_id = l.id
     where l.id = ${language_id}
@@ -78,7 +78,40 @@ const LanguageService = {
       id = ${language_id};
     
     COMMIT;`)
+  },
 
+  getWordID(db, language_id, word){
+    return db.raw(`select id
+    from word
+    where original = '${word}'
+    and language_id = ${language_id}`)
+  },
+
+  getNextID(db, language_id, word_id){
+    return db.raw(`select "next"
+    from word
+    where id = ${word_id}
+    and language_id = ${language_id}`)
+  },
+
+  setHead(db, id, head){
+    db.raw(`update "language"
+    set head = ${head}
+    where id = ${id}`)
+  },
+
+  savePlacement(db, current_id, next_id, next_next){
+    db.raw(`begin;
+
+    UPDATE word 
+    SET "next" = ${current_id}
+    WHERE id = ${next_id};
+    
+    UPDATE word 
+    SET "next" = ${next_next}
+    WHERE id = ${current_id};
+    
+    commit;`)
   },
 };
 

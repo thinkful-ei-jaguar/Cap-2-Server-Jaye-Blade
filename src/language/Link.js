@@ -76,6 +76,7 @@ class LinkedList {
     }
     previousNode.next = currNode.next;
   }
+
   insertBefore(newItem, oldItem) {
     // If the list is empty
     if (!oldItem) {
@@ -92,11 +93,13 @@ class LinkedList {
     }
     tempNode.next = newNode;
   }
+
   insertAfter(newItem, oldItem) {
     let oldNode = this.find(oldItem)
     let newNode = new _Node(newItem, oldNode.next)
     oldNode.next = newNode
   }
+
   insertAt(newItem, pos) {
     let tempNode = this.head;
     for(let i = 1; i<pos; i++){
@@ -107,6 +110,15 @@ class LinkedList {
     }
     this.insertBefore(newItem, tempNode.value)
   }
+
+  print(){
+    let temp = this.head
+    while(temp.next != null){
+      console.log(temp.value)
+      temp = temp.next
+    }
+  }
+
 }
 
 module.exports = LinkedList

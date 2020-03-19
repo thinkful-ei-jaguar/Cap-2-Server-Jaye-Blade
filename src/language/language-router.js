@@ -64,6 +64,7 @@ languageRouter
 languageRouter
   .route('/guess')
   .post(jsonBodyParser, async (req, res, next) => {
+    //if guess field does not exist, send error
     const { guess } = req.body
     if(!guess){
       return res.status(400).json({
@@ -71,50 +72,74 @@ languageRouter
       })
     }
     
-    // let list = new Link()
-    // const orgwords = await LanguageService.populate(req.app.get('db'), req.language.id)
-    // orgwords.rows.map(word => list.insertLast(word.original))
-    
-    // let answer = await LanguageService.getWord(req.app.get('db'), req.language.id, list.head.value)
-    // answer = answer.rows[0].translation.trim()
-    // const values = await LanguageService.getValues(req.app.get('db'), req.language.id, list.head.value)
-    // let { memory_value, correct_count, incorrect_count, total_score } = values.rows[0]
-    // let isCorrect
-    // if(guess === answer){
-    //   isCorrect = true
-    //   memory_value *= 2
-    //   correct_count += 1
-    //   total_score += 1
-    // }
-    // else {
-    //   isCorrect = false
-    //   memory_value = 1
-    //   incorrect_count += 1
-    // }
-    // const newValues = {
-    //   memory_value, 
-    //   correct_count, 
-    //   incorrect_count, 
-    //   total_score
-    // }
-    // LanguageService.setValues(req.app.get('db'), req.language.id, list.head.value, newValues)
-    // temp = list.head.value
-    // list.remove(list.head.value)
-    // list.insertAt(temp, memory_value)
-    // const nextValues = await LanguageService.getValues(req.app.get('db'), req.language.id, list.head.value)
-    // correct_count = nextValues.rows[0].correct_count
-    // incorrect_count = nextValues.rows[0].incorrect_count
+    //create new list and populate it from db
+    let list = new Link()
+    let word = await LanguageService.populate(req.app.get('db'), req.language.id, req.language.head)
+    while(word.rows[0].next != null) {
+      list.insertLast(word.rows[0].original)
+      word = await LanguageService.populate(req.app.get('db'), req.language.id, word.rows[0].next)
+    }
+    list.insertLast(word.rows[0].original)
+    list.insertLast(word.rows[0].original)
 
+    //get the translation from db
+    let answer = await LanguageService.getTrans(req.app.get('db'), req.language.id, list.head.value)
+    answer = answer.rows[0].translation.trim()
 
-    // const output = {
-    //   nextWord: list.head.value,
-    //   wordCorrectCount: correct_count,
-    //   wordIncorrectCount: incorrect_count,
-    //   totalScore: total_score,
-    //   answer,
-    //   isCorrect,
-    // }
-    // res.json(output)
+    //get the other values from db
+    const values = await LanguageService.getValues(req.app.get('db'), req.language.id, list.head.value)
+    let { memory_value, correct_count, incorrect_count, total_score } = values.rows[0]
+    let isCorrect
+
+    //modify values according to algorithm
+    if(guess === answer){
+      isCorrect = true
+      memory_value *= 2
+      correct_count += 1
+      total_score += 1
+    }
+    else {
+      isCorrect = false
+      memory_value = 1
+      incorrect_count += 1
+    }
+
+    //save the new values to the word in the database
+    const newValues = {
+      memory_value, 
+      correct_count, 
+      incorrect_count, 
+      total_score
+    }
+    LanguageService.setValues(req.app.get('db'), req.language.id, list.head.value, newValues)
+
+    //remove the current word and place it however many steps back
+    temp = list.head.value
+    list.remove(list.head.value)
+    list.insertAt(temp, memory_value)
+
+    //get next word and its values for correct and incorrect
+    const nextValues = await LanguageService.getValues(req.app.get('db'), req.language.id, list.head.value)
+    correct_count = nextValues.rows[0].correct_count
+    incorrect_count = nextValues.rows[0].incorrect_count
+
+    //save the order of the linked list to the database
+    const headID = await LanguageService.getWordID(req.app.get('db'), req.language.id, list.head.value)
+    LanguageService.setHead(req.app.get('db'), req.language.id, headID.rows[0].id)
+    const current_ID = await LanguageService.getWordID(req.app.get('db'), req.language.id, temp)
+    const next_next = await LanguageService.getNextID(req.app.get('db'), req.language.id, current_ID.rows[0].id+memory_value)
+    LanguageService.savePlacement(req.app.get('db'), current_ID.rows[0].id, current_ID.rows[0].id+memory_value, next_next.rows[0].next)
+
+    //send back the required fields
+    const output = {
+      nextWord: list.head.value,
+      wordCorrectCount: correct_count,
+      wordIncorrectCount: incorrect_count,
+      totalScore: total_score,
+      answer,
+      isCorrect,
+    }
+    res.json(output)
   })
 
 module.exports = languageRouter;
