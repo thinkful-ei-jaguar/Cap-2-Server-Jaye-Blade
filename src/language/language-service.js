@@ -41,7 +41,6 @@ const LanguageService = {
     FROM word w JOIN "language" l ON w.language_id = l.id
     where l.id = ${language_id}
     and w.id = ${word_id}`)
-   
   },
 
   getTrans(db, language_id, word){
@@ -77,7 +76,7 @@ const LanguageService = {
     WHERE
       id = ${language_id};
     
-    COMMIT;`)
+    COMMIT;`).then()
   },
 
   getWordID(db, language_id, word){
@@ -97,7 +96,7 @@ const LanguageService = {
   setHead(db, id, head){
     db.raw(`update "language"
     set head = ${head}
-    where id = ${id}`)
+    where id = ${id}`).then()
   },
 
   savePlacement(db, current_id, next_id, next_next){
@@ -111,7 +110,7 @@ const LanguageService = {
     SET "next" = ${next_next}
     WHERE id = ${current_id};
     
-    commit;`)
+    commit;`).then()
   },
 };
 

@@ -71,6 +71,7 @@ languageRouter
         error: `Missing 'guess' in request body`
       })
     }
+    guess.toLowerCase()
     
     //create new list and populate it from db
     let list = new Link()
@@ -85,6 +86,7 @@ languageRouter
     //get the translation from db
     let answer = await LanguageService.getTrans(req.app.get('db'), req.language.id, list.head.value)
     answer = answer.rows[0].translation.trim()
+    answer.toLowerCase()
 
     //get the other values from db
     const values = await LanguageService.getValues(req.app.get('db'), req.language.id, list.head.value)
@@ -114,9 +116,9 @@ languageRouter
     LanguageService.setValues(req.app.get('db'), req.language.id, list.head.value, newValues)
 
     //remove the current word and place it however many steps back
-    temp = list.head.value
+    let temp = list.head.value
     list.remove(list.head.value)
-    list.insertAt(temp, memory_value)
+    list.insertAt(temp, memory_value+1)
 
     //get next word and its values for correct and incorrect
     const nextValues = await LanguageService.getValues(req.app.get('db'), req.language.id, list.head.value)
