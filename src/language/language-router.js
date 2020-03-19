@@ -65,13 +65,13 @@ languageRouter
   .route('/guess')
   .post(jsonBodyParser, async (req, res, next) => {
     //if guess field does not exist, send error
-    const { guess } = req.body
+    let { guess } = req.body
     if(!guess){
       return res.status(400).json({
         error: `Missing 'guess' in request body`
       })
     }
-    guess.toLowerCase()
+    guess = guess.toLowerCase()
     
     //create new list and populate it from db
     let list = new Link()
@@ -86,7 +86,7 @@ languageRouter
     //get the translation from db
     let answer = await LanguageService.getTrans(req.app.get('db'), req.language.id, list.head.value)
     answer = answer.rows[0].translation.trim()
-    answer.toLowerCase()
+    answer = answer.toLowerCase()
 
     //get the other values from db
     const values = await LanguageService.getValues(req.app.get('db'), req.language.id, list.head.value)
