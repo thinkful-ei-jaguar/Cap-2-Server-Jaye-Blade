@@ -33,14 +33,14 @@ const LanguageService = {
     return db
       .raw(`SELECT original, correct_count, incorrect_count, total_score
       FROM word w JOIN "language" l ON w.language_id = l.id
-      WHERE w.id = ${head};`)
+      WHERE w.id = ${head};`);
   },
 
   populate(db, language_id, word_id){
     return db.raw(`SELECT original, "next"
     FROM word w JOIN "language" l ON w.language_id = l.id
     where l.id = ${language_id}
-    and w.id = ${word_id}`)
+    and w.id = ${word_id}`);
    
   },
 
@@ -48,56 +48,74 @@ const LanguageService = {
     return db.raw(`SELECT "translation"
     FROM word w JOIN "language" l ON w.language_id = l.id
     where l.id = ${language_id}
-    and original = '${word}';`)
+    and original = '${word}';`);
   },
 
   getValues(db, language_id, word){
     return db.raw(`SELECT memory_value, correct_count, incorrect_count, total_score
     FROM word w JOIN "language" l ON w.language_id = l.id
     where l.id = ${language_id}
-    and original = '${word}';`)
+    and original = '${word}';`);
   },
 
   setValues(db, language_id, word, values){
-    db.raw(`BEGIN;
+    //console.log('Inside service function:', values)
+    // db.raw(`BEGIN;
 
-    UPDATE
-      word
-    SET
-        memory_value = ${values.memory_value}, 
-        correct_count = ${values.correct_count}, 
-        incorrect_count = ${values.incorrect_count}
-    WHERE
-      language_id = ${language_id} and original = '${word}';
+    // UPDATE
+    //   word
+    // SET
+    //     memory_value = ${values.memory_value}, 
+    //     correct_count = ${values.correct_count}, 
+    //     incorrect_count = ${values.incorrect_count}
+    // WHERE
+    //   language_id = ${language_id} and original = '${word}';
     
-    UPDATE
-      "language"
-    SET
-      total_score = ${values.total_score}
-    WHERE
-      id = ${language_id};
+    // UPDATE
+    //   language
+    // SET
+    //   total_score = ${values.total_score}
+    // WHERE
+    //   id = ${language_id};
     
-    COMMIT;`)
+    // COMMIT;`);
+
+    return db
+      .from('word')
+      .where({language_id: language_id, original: word})
+      .update({memory_value: values.memory_value, correct_count: values.correct_count, incorrect_count: values.incorrect_count})
+      .then(console.log('success?', 'memory value:', values.memory_value))
+      
+  
+  },
+
+  setValuesTest(db, language_id, word, values) {
+    //console.log('Set values test 2:', values)
+    return db
+    .from('language')
+    .where({id: language_id})
+    .update({total_score: values.total_score})
+    .then(console.log('Success 2?'))
   },
 
   getWordID(db, language_id, word){
     return db.raw(`select id
     from word
     where original = '${word}'
-    and language_id = ${language_id}`)
+    and language_id = ${language_id}`);
   },
 
   getNextID(db, language_id, word_id){
     return db.raw(`select "next"
     from word
     where id = ${word_id}
-    and language_id = ${language_id}`)
+    and language_id = ${language_id}`);
   },
 
   setHead(db, id, head){
     db.raw(`update "language"
     set head = ${head}
-    where id = ${id}`)
+    where id = ${id}`).then();
   },
 
   savePlacement(db, current_id, next_id, next_next){
@@ -111,7 +129,7 @@ const LanguageService = {
     SET "next" = ${next_next}
     WHERE id = ${current_id};
     
-    commit;`)
+    commit;`).then();
   },
 };
 
