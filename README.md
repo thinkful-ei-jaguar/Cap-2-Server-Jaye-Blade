@@ -2,7 +2,7 @@
 
 ## Written by Blade Boles and Jaye Laguardia
 
-## Live Link: [Spaced Repetition](https://weebify.bladeboles.now.sh)
+## Live Link: [Weebify](https://weebify.bladeboles.now.sh)
 
 ## Client Repo Link: [Client Repo](https://github.com/thinkful-ei-jaguar/Cap-2-Client-Jaye-Blade)
 
