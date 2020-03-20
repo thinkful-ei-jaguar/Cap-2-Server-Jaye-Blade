@@ -78,7 +78,7 @@ const LanguageService = {
     // WHERE
     //   id = ${language_id};
     
-    // COMMIT;`);
+    // COMMIT;`).then();
 
     return db
       .from('word')
