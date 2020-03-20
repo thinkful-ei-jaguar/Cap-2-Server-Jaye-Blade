@@ -1,4 +1,4 @@
-# Spaced repetition API!
+# Weebify
 
 ## Written by Blade Boles and Jaye Laguardia
 
